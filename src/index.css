@@ -1,0 +1,48 @@
+/* sky blue background with animated pencils flying across the screen
+
+  -create animation that makes elements "fly" across screen
+  -get elements to spawn in randomly across y axis so they're nicely spaced
+    -probably have them spawn in off screen
+  -get elements to spawn in randomly across the field to start so they're nicely spaced
+  -use stone's transparent pencil image as element
+    (or find/make a better one >:^) )
+
+*/
+body {
+  background-color: rebeccapurple;
+}
+
+/* @function positionPencils() */
+
+@keyframes flyLeft {
+  0%   {left:0px;}
+ 
+  100% {left:1000px;}
+}
+
+.pencils{
+  z-index: -100;
+  /* img:nth-child(1){
+    height: 100px;
+  }
+  img:nth-child(2){
+    height: 300px;
+  }
+  img:nth-child(1){
+    height: 600px;
+  } */
+}
+
+.pencil{
+  z-index: -100;
+  width: 100px;
+  /* height: 100px; */
+  position: relative;
+  animation-name: flyLeft;
+  /* by using only two keyframes we can have the computer smoothly sail our pencils and set that speed with the duration here */
+  animation-duration: 8s;
+  /* repeat animation */
+  animation-iteration-count: infinite;
+  /* maintain speed of pencils */
+  animation-timing-function: linear;
+}
