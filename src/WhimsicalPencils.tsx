@@ -124,9 +124,9 @@ const WhimsicalPencils = () => {
     update(context: CanvasRenderingContext2D){
       context.beginPath()
       this.draw(context)
-      context.rotate((1 / 60  * Math.PI) / 180)
-      context.fill()
-      context.closePath()
+      // context.rotate((1 / 60  * Math.PI) / 180)
+      // context.fill()
+      // context.closePath()
 
       
       console.log("x,y: ", this.xpos, this.ypos)
