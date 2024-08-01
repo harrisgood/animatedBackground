@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Pencil } from './PencilClass.ts'
+import Pencil from './PencilClass.ts'
 
 const BackgroundAnimation = () => {
     useEffect(() => {

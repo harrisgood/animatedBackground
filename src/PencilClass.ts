@@ -25,7 +25,7 @@ const getRandomSignChanger = () => {
   }
 }
 
-export class Pencil {
+export default class Pencil {
     image: HTMLImageElement // probably redundant to give every pencil the img src
     xpos: number
     ypos: number
