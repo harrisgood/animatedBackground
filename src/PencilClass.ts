@@ -1,35 +1,31 @@
 import pencilPNG from './pencil.png'
 
-const Spinning = () => {
-  // create a pencil HTMLImageElement we can use on our canvas without actually drawing anything on the page yet
-  const pencilImg = new Image(512, 512)
-  pencilImg.src = pencilPNG
-  
-  // pull the 'data' of the canvas on our page so we can manipulate it
-  const canvas = document.getElementById("canvas") as HTMLCanvasElement
+// create a pencil HTMLImageElement we can use on our canvas without actually drawing anything on the page yet
+const pencilImg = new Image(512, 512)
+pencilImg.src = pencilPNG
 
-  // set bounds of canvas to page size
-  const windowHeighth = window.innerHeight
-  const windowWidth = window.innerWidth
-  
-  const getRandomNumber = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min
+// set bounds of canvas to page size
+const windowHeighth = window.innerHeight
+const windowWidth = window.innerWidth
+
+const getRandomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+const getRandomDecimal = (min: number, max: number) => {
+  return Math.random() * (max - min) + min
+}
+
+const getRandomSignChanger = () => {
+  const num = getRandomNumber(0, 1)
+  if(num === 0){
+    return -1
+  }else {
+    return 1
   }
+}
 
-  const getRandomDecimal = (min: number, max: number) => {
-    return Math.random() * (max - min) + min
-  }
-
-  const getRandomSignChanger = () => {
-    const num = getRandomNumber(0, 1)
-    if(num === 0){
-      return -1
-    }else {
-      return 1
-    }
-  }
-
-  class Pencil {
+export class Pencil {
     image: HTMLImageElement // probably redundant to give every pencil the img src
     xpos: number
     ypos: number
@@ -46,7 +42,6 @@ const Spinning = () => {
     degree: number
     dDegree: number
 
-    // i bet we can remove some of these arguments and just do their calculations in here
     constructor() {
       this.image = pencilImg
       this.xpos = getRandomNumber(0,windowWidth)
@@ -70,19 +65,12 @@ const Spinning = () => {
 
     draw(context: CanvasRenderingContext2D){
       if(context){
-        // setTransform(a, b, c, d, e, f)
-        // changes origin from (x,y) => (ax + cy + e, bx+ dy + f)
-          // e is horizontal translation, f is vertical translation
-          // when b and c are 0, a and d control horizontal and vertical scaling of ctx
-          // when a and d are 1, b and c control the horizontal and vertical skewing of the ctx
-            // so if we use setTransform(imgScaler, 0, 0, imgScaler, imgXpos, imgYpos)
-              // we can set the context origin to be the center of the image
 
         // set context origin and scale to match center of image being drawn
         context.setTransform(this.scale, 0, 0, this.scale, this.xpos, this.ypos)
         context.rotate(this.degree)
         context.drawImage(this.image, -this.image.width / 2, -this.image.height / 2)
-        // context.drawImage(pencilImg, this.xpos, this.ypos, this.size, this.size)
+        
       }
     }
 
@@ -140,112 +128,28 @@ const Spinning = () => {
         this.ypos = windowHeighth
         this.xDirection = getRandomSignChanger()
         this.yDirection = -1
-      }
-      // console.log("this pencil? ",this)  
+      } 
     }
 
     update(context: CanvasRenderingContext2D){
+      // unused variables for handling margins when pencils go off page
       // let imgHeightModifier: number, imgWidthModifier: number
-      // this.draw(context) 
-
-      /*
-      rotation
-        context.rotate( degrees * Math.PI / 180)
-          -will always rotate about the origin (0,0) which creates an orbiting effect
-          -we can move the origin by using context.translate, to set it to the center of the pencil?
-
-        1. context.setTransform() canvas origin to image center
-        2. context.rotate() canvas to desired angle
-        4. context.drawImage() at desired angle and position
-        5. context.setTransform() back to original angle
-      */
-
-      //reset origin to default scale/position
-//       context.setTransform(1, 0, 0, 1, 0, 0)
-// /////////////////////WE MAY NEED THIS LINE//////////////////////////////////      
-//       context.clearRect(0, 0, canvas.width, canvas.height)
-///////////////////^^WE MAY NEED THIS LINE^^////////////////////////////////
 
       // check if pencil is still on page and needs a reset
       if(this.IsOffPage()){
         this.resetPosition()
       }
-      // handle x/ytranslations
+
       this.xpos += this.dx * this.xDirection
       this.ypos += this.dy * this.yDirection
-      // handle change in current degree of rotation
       this.degree += this.dDegree
 
-      // code for handling margins and resetting?
+      // unused code to handle margins when pencils go off page
       // imgHeightModifier = this.image.width * this.scale * 2 + windowWidth
       // imgWidthModifier = this.image.height * this.scale * 2 + windowHeighth
       // this.rotatedXpos = ((this.xpos % imgWidthModifier) + imgWidthModifier) % imgWidthModifier - this.image.width * this.scale
       // this.rotatedYpos = ((this.ypos % imgHeightModifier) + imgHeightModifier) % imgHeightModifier - this.image.height * this.scale
 
       this.draw(context) 
-
-      // we may also need a counter rotation here (or along with above transform) to get back to original context
-      // context.rotate(((-1 / 60) * Math.PI) / 180)
-      
-
-      // this.ypos += this.dx * this.yDirection
-      // this.xpos += this.dx * this.xDirection
     }
   }
-  
-  if(canvas){
-    canvas.style.background = 'skyblue'
-    canvas.width = windowWidth
-    canvas.height = windowHeighth
-    const context = canvas.getContext("2d")
-    
-    // create an array of all pencils
-    const allPencils: Pencil[] = []
-    
-    for(let i = 1; i <= 20; i++){
-  
-      const pencilTemplate = new Pencil()
-      // pencilTemplate.resetPosition()
-      allPencils.push(pencilTemplate)
-    }
-   
-    if(context){
-      // create an animation function
-      const updatePencils = () => {
-          // set up an animation that repeats this function
-          requestAnimationFrame(updatePencils)
-
-          // erase all drawn pencils (and the whole canvas)
-          // context.clearRect(0, 0, windowWidth, windowHeighth)
-          
-          context.setTransform(1, 0, 0, 1, 0, 0)
-          context.clearRect(0, 0, canvas.width, canvas.height)
-          
-          // update position and redraw them
-          allPencils.map(pencil => {
-            pencil.update(context)
-            
-          })
-        }
-        // call the animation function
-        updatePencils()
-    }
-  }
-  
-  return (
-    
-      <canvas
-        id="canvas"
-        style={{
-          top: 0,
-          right: 0,
-          position: 'fixed',
-          zIndex: '-100',
-        }}
-      >
-      </canvas>
-   
-  )
-}
-
-export default Spinning

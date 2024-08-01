@@ -2,8 +2,9 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './index.css'
-import Spinning from './Spinning.tsx'
+// import Spinning from './Spinning.tsx'
 // import pencilPNG from './pencil.png'
+import BackgroundAnimation from './BackgroundAnimation.tsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -12,7 +13,7 @@ function App() {
 
   return (
     <>
-      <Spinning />
+      <BackgroundAnimation />
       <div>
 
         <a href="https://vitejs.dev" target="_blank">
