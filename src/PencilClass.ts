@@ -55,10 +55,10 @@ export default class Pencil {
       this.xDirection = getRandomSignChanger()
       this.yDirection = getRandomSignChanger()
       
-      this.scale = getRandomDecimal(0.1, 0.25) // resizes image
+      this.scale = getRandomDecimal(0.05, 0.13) // resizes image
       this.degree = Math.PI * 2 // current degree of the pencil in its rotation
 
-      this.dDegree = getRandomDecimal(-0.1, 0.1)  // change in pencil degree
+      this.dDegree = getRandomDecimal(-0.04, 0.04)  // change in pencil degree
       this.dx = 1 * this.xspeed // delta x aka the change in xpos per animation frame
       this.dy = 1 * this.yspeed
     }
@@ -79,7 +79,7 @@ export default class Pencil {
       let result = false
 
       // if pencil goes RIGHT off the page
-      if(this.xpos > windowWidth && this.xDirection === 1){
+      if(this.xpos - this.image.width * this.scale > windowWidth && this.xDirection === 1){
         //reset pencil to start of page
         result = true
       }
@@ -89,7 +89,7 @@ export default class Pencil {
         result = true
       }
       // if pencil goes DOWN off the page
-      if(this.ypos > windowHeighth && this.yDirection === 1){
+      if(this.ypos - this.image.height * this.scale > windowHeighth && this.yDirection === 1){
         result = true
       }
       // if pencil goes UP off the page
@@ -133,7 +133,7 @@ export default class Pencil {
 
     update(context: CanvasRenderingContext2D){
       // unused variables for handling margins when pencils go off page
-      // let imgHeightModifier: number, imgWidthModifier: number
+      let imgHeightModifier: number, imgWidthModifier: number
 
       // check if pencil is still on page and needs a reset
       if(this.IsOffPage()){
@@ -145,10 +145,10 @@ export default class Pencil {
       this.degree += this.dDegree
 
       // unused code to handle margins when pencils go off page
-      // imgHeightModifier = this.image.width * this.scale * 2 + windowWidth
-      // imgWidthModifier = this.image.height * this.scale * 2 + windowHeighth
-      // this.rotatedXpos = ((this.xpos % imgWidthModifier) + imgWidthModifier) % imgWidthModifier - this.image.width * this.scale
-      // this.rotatedYpos = ((this.ypos % imgHeightModifier) + imgHeightModifier) % imgHeightModifier - this.image.height * this.scale
+      imgHeightModifier = this.image.width * this.scale * 2 + windowWidth
+      imgWidthModifier = this.image.height * this.scale * 2 + windowHeighth
+      this.rotatedXpos = ((this.xpos % imgWidthModifier) + imgWidthModifier) % imgWidthModifier - this.image.width * this.scale
+      this.rotatedYpos = ((this.ypos % imgHeightModifier) + imgHeightModifier) % imgHeightModifier - this.image.height * this.scale
 
       this.draw(context) 
     }
